@@ -1,0 +1,82 @@
+.Form {
+  margin: 0 auto;
+  height: 5rem;
+  background-color: $color-white;
+
+  border-bottom: 1px solid $color-grey-light-2;
+
+  &__group {
+    margin: 0 auto;
+    @include clearfix;
+  }
+
+  &__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    width: 10%;
+    height: 100%;
+    text-align: center;
+
+    &:not(:last-child) {
+      border-right: 1px solid $color-grey-light-2;
+    }
+
+    &--checkbox {
+      width: 1.5rem;
+      height: 1.5rem;
+      padding: 0;
+      line-height: 1.2rem;
+      color: $color-primary-dark;
+      border: 0.8px solid $color-grey-light-2;
+      border-radius: 2px;
+
+      user-select: none; //makes checkmark unselectable
+
+      &-checked {
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+        padding: 2px;
+        border: 2px solid white;
+        background-color: $color-primary-dark;
+
+        user-select: none; //makes checkmark unselectable
+      }
+    }
+  }
+
+  &__input {
+    float: left;
+    width: 70%;
+    height: 100%;
+    padding: 1rem 2rem;
+    margin-bottom: 0;
+    background-color: $color-white;
+    border: none;
+    border-bottom: 2px solid $color-white;
+
+    font-family: inherit;
+    color: inherit;
+    font-size: 2rem;
+
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      box-shadow: $shadow-xs;
+      border: 1px solid $color-secondary;
+    }
+
+    &::-webkit-input-placeholder {
+      color: $color-grey-light-2;
+    }
+  }
+
+  &__button {
+    float: right;
+    width: 20%;
+    height: 100%;
+  }
+}

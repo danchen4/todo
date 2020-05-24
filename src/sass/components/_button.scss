@@ -1,0 +1,33 @@
+.btn {
+  &,
+  &:link,
+  &:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+  }
+
+  &:active,
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+
+  &--secondary {
+    background-color: $color-secondary-dark;
+    font-size: 2rem;
+    padding: 1rem 2rem;
+    color: white;
+
+    &:hover {
+      background-color: $color-secondary;
+      // transform: translateY(-0.1rem);
+    }
+
+    &:active {
+      background-color: $color-secondary-dark;
+      transform: translateY(0rem);
+    }
+  }
+}

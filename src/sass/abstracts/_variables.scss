@@ -1,0 +1,35 @@
+//COLORS
+$color-white: #fff;
+$color-black: #000;
+
+$color-grey-dark-1: #777;
+$color-grey-dark-2: #999;
+$color-grey-dark-3: #333;
+$color-grey-light-1: #f8f87f8;
+$color-grey-light-2: #eeeeee;
+
+$color-primary: #add681;
+$color-primary-light: #e0ffb1;
+$color-primary-dark: #7ca453;
+
+$color-secondary: #1976d2;
+$color-secondary-light: #63a4ff;
+$color-secondary-dark: #004ba0;
+
+$color-tertiary: #ec407a;
+$color-tertiary-light: #ff77a9;
+$color-tertiary-dark: #b4004e;
+
+// BOX SHADOW
+$shadow-xs: 0 0.5rem 2rem rgba($color-black, 0.08);
+$shadow-sm: 0 0.8rem 2.5rem rgba($color-black, 0.1);
+$shadow-md: 0 1.5rem 4rem rgba($color-black, 0.15);
+$shadow-lg: 0 2rem 5rem rgba($color-black, 0.2);
+
+// BORDER RADIUS
+$border-radius-sm: 0.3rem;
+$border-radius-md: 0.6rem;
+$border-radius-lg: 1rem;
+
+// WIDTH
+$width-main: 400px;

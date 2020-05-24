@@ -1,0 +1,46 @@
+.ActionTab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 1rem;
+  height: 3rem;
+  background-color: $color-white;
+
+  color: $color-grey-dark-2;
+  text-transform: uppercase;
+
+  // border-bottom: 1px solid $color-grey-light-2;
+
+  &__text {
+    width: 20%;
+    padding: 0 0.5rem;
+  }
+
+  &__clear {
+    width: 20%;
+    padding: 0 0.5rem;
+    font-size: 0.8rem;
+    user-select: none; //makes checkmark unselectable
+  }
+
+  &__view-group {
+    width: 60%;
+  }
+
+  &__view {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0 0.3rem;
+    border: 1px solid transparent;
+    border-radius: $border-radius-md;
+    font-size: 1rem;
+    color: $color-grey-dark-2;
+
+    transition: all 0.1s;
+
+    &:focus {
+      border: 1px solid $color-grey-light-2;
+    }
+  }
+}
