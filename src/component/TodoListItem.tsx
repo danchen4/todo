@@ -11,8 +11,6 @@ interface TodoListItemProps {
 
 export const TodoListItem: React.FC<TodoListItemProps> = React.memo(
   ({ id, completed, todoText, children, deleteTodo, toggleComplete, changeTodo }) => {
-    console.log('<TodoItem /> Render');
-
     const [showInput, setShowInput] = useState(false);
     const [hideInputOnBlur, setHideInputOnBlur] = useState(false);
     const [inputValue, setInputValue] = useState('');
@@ -23,27 +21,26 @@ export const TodoListItem: React.FC<TodoListItemProps> = React.memo(
       classToggleComplete.push('TodoListItem__todo--completed');
     }
 
-    // focus on the <input>
+    // focus on the <input> if possible
     useEffect(() => {
       if (inputRef.current) {
         inputRef.current.focus();
       }
     });
 
-    // set <input> value to todoText from <App /> state passed down as props
+    // set <input> value to todoText props
     useEffect(() => {
       setInputValue(todoText);
     }, [todoText]);
 
-    // Could use useReducer, but a bit overkill
     const doubleClickHandler = (): void => {
       setShowInput(true);
       setHideInputOnBlur(false);
     };
 
-    // Even though this is causing re-renders, nothing else changes except for the <input> value
-    const inputChangeHandler = (e: any) => {
-      setInputValue(e.target.value);
+    const inputChangeHandler = (e: React.FormEvent<HTMLInputElement>) => {
+      let target = e.target as HTMLInputElement;
+      setInputValue(target.value);
     };
 
     // When clicking outside of <input> need to remove input and changeTodo in <App /> state
@@ -52,13 +49,20 @@ export const TodoListItem: React.FC<TodoListItemProps> = React.memo(
       changeTodo(inputValue, id);
     };
 
+    // When hitting 'Enter', should hide input on 'Blur' and set Todo
+    const enterKeyDownHandler = (e: React.KeyboardEvent): void => {
+      if (e.key === 'Enter') {
+        setHideInputOnBlur(true);
+        changeTodo(inputValue, id);
+      }
+    };
+
     let todoItem = (
       <div className={classToggleComplete.join(' ')} onDoubleClick={doubleClickHandler}>
         {todoText}
       </div>
     );
-
-    //Only show <input> inplace of text if double clicked, if not blurred, and if not completed
+    //Show <input> instead of todo if todo is double clicked, if <input> is not blurred, and if todo is not completed
     if (showInput && !hideInputOnBlur && !completed) {
       todoItem = (
         <input
@@ -67,6 +71,7 @@ export const TodoListItem: React.FC<TodoListItemProps> = React.memo(
           value={inputValue}
           onChange={inputChangeHandler}
           onBlur={blurHandler}
+          onKeyDown={enterKeyDownHandler}
         />
       );
     }

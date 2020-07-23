@@ -1,29 +1,27 @@
-import React, { useState, createRef, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 
 interface FormProps {
   addTodo(todo: string): void;
   toggleAll(): void;
 }
 
-export const Form: React.FC<FormProps> = React.memo(({ addTodo, toggleAll }) => {
-  console.log('<TodoForm /> Render');
-
-  const textInput = createRef<HTMLInputElement>();
+export const TodoForm: React.FC<FormProps> = React.memo(({ addTodo, toggleAll }) => {
   const [input, setInput] = useState('');
   const [toggleAllButton, setToggleAllButton] = useState(false);
+  const textInput = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (textInput.current) {
       textInput.current.focus();
     }
-  }, [textInput]);
+  }, []);
 
   const inputChangeHandler = (e: React.FormEvent<HTMLInputElement>): void => {
     let target = e.target as HTMLInputElement;
     setInput(target.value);
   };
 
-  const enterKeyHandler = (e: React.KeyboardEvent): void => {
+  const enterKeyDownHandler = (e: React.KeyboardEvent): void => {
     if (e.key === 'Enter') {
       addTodo(input);
       setInput('');
@@ -52,13 +50,14 @@ export const Form: React.FC<FormProps> = React.memo(({ addTodo, toggleAll }) => 
       <input
         className="Form__input"
         placeholder="What would you like to do?"
+        ref={textInput}
         onChange={inputChangeHandler}
-        onKeyDown={enterKeyHandler}
+        onKeyDown={enterKeyDownHandler}
         value={input}
       />
       <button className="btn btn--secondary Form__button" onClick={addTodoHandler}>
-          Add
-        </button>
+        Add
+      </button>
     </div>
   );
 });

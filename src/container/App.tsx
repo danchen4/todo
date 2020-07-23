@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
-
 import '../sass/main.scss';
 import { TodoList } from '../component/TodoList';
-import { Form } from '../component/Form';
-import { ActionTab } from '../component/ActionTab';
+import { TodoForm } from '../component/TodoForm';
+import { TodoViews } from '../component/TodoViews';
 
 export interface Todo {
   id: number;
@@ -18,41 +17,57 @@ export enum View {
   Completed,
 }
 
+const defaultList: Todo[] = [
+  { id: 1, text: 'first todo', completed: false },
+  { id: 2, text: 'second todo', completed: false },
+  { id: 3, text: 'third todo', completed: false },
+];
+
+let initialList = defaultList;
+
+// Check session storage to see if there is a todoList and use session stored todoList as initial list.
+const sessionTodoList = sessionStorage.getItem('todoList');
+if (sessionTodoList) {
+  const todoList = JSON.parse(sessionTodoList);
+  initialList = todoList;
+}
+
 const App = () => {
-  console.log('<App /> Render');
-
-  const initialList: Todo[] = [
-    { id: 1, text: 'first todo', completed: false },
-    { id: 2, text: 'second todo', completed: false },
-    { id: 3, text: 'third todo', completed: false },
-  ];
-
   const [todoList, setTodoList] = useState(initialList);
   const [todoView, setTodoView] = useState<View>(View.All);
 
   const deleteTodoHandler = useCallback(
     (id: number): void => {
-      setTodoList(todoList.filter((text: Todo) => text.id !== id));
+      const updatedTodoList = todoList.filter((text: Todo) => text.id !== id);
+      setTodoList(updatedTodoList);
+      sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
     },
     [todoList]
   );
 
   const addTodoHandler = useCallback(
     (text: string): void => {
-      setTodoList(todoList.concat({ id: todoList.length + 1, text: text, completed: false }));
+      const updatedTodoList = todoList.concat({
+        id: todoList.length + 1,
+        text: text,
+        completed: false,
+      });
+      setTodoList(updatedTodoList);
+      sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
     },
     [todoList]
   );
 
   const toggleCompleteHandler = useCallback(
     (id: number): void => {
-      const todoListCopy = [...todoList];
-      for (let todo of todoListCopy) {
+      const updatedTodoList = [...todoList];
+      for (let todo of updatedTodoList) {
         if (todo.id === id) {
           todo.completed = !todo.completed;
         }
       }
-      setTodoList(todoListCopy);
+      setTodoList(updatedTodoList);
+      sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
     },
     [todoList]
   );
@@ -62,56 +77,55 @@ const App = () => {
       return;
     }
 
-    const todoListCopy = [...todoList];
+    const updatedTodoList = [...todoList];
     let countCompleted = 0;
 
-    todoListCopy.forEach((todo: Todo): void => {
+    updatedTodoList.forEach((todo: Todo): void => {
       if (todo.completed === true) {
         countCompleted++;
       }
     });
 
-    todoListCopy.forEach((todo: Todo): void => {
-      if (todoListCopy.length === countCompleted) {
+    updatedTodoList.forEach((todo: Todo): void => {
+      if (updatedTodoList.length === countCompleted) {
         todo.completed = false;
       } else {
         todo.completed = true;
       }
     });
 
-    setTodoList(todoListCopy);
+    setTodoList(updatedTodoList);
+    sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
   }, [todoList]);
 
   const changeTodoHandler = useCallback(
     (todo: string, id: number) => {
-      const todoListCopy = [...todoList];
-      todoListCopy[id - 1].text = todo;
-      setTodoList(todoListCopy);
+      const updatedTodoList = [...todoList];
+      updatedTodoList[id - 1].text = todo;
+      setTodoList(updatedTodoList);
+      sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
     },
     [todoList]
   );
 
-  const clearAllHandler = (): void => {
-    const todoListCopy = [...todoList];
+  const clearAllHandler = useCallback((): void => {
+    const updatedTodoList = todoList.filter((todo: Todo) => {
+      return todo.completed === false;
+    });
 
-    setTodoList(
-      todoListCopy.filter((todo: Todo) => {
-        return todo.completed === false;
-      })
-    );
-    // setTodoView(View.Active);
-  };
+    setTodoList(updatedTodoList);
+    sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
+  }, [todoList]);
 
-  const changeViewHandler = (view: View): void => {
+  const changeViewHandler = useCallback((view: View): void => {
     setTodoView(view);
-    console.log('<App />', todoView);
-  };
+  }, []);
 
   return (
     <div className="App">
       <h2 className="heading-primary u-mbot-xs">TODO IT</h2>
       <div className="App__section">
-        <Form addTodo={addTodoHandler} toggleAll={toggleAllHandler} />
+        <TodoForm addTodo={addTodoHandler} toggleAll={toggleAllHandler} />
         <TodoList
           todoList={todoList}
           deleteTodo={deleteTodoHandler}
@@ -126,7 +140,11 @@ const App = () => {
           unmountOnExit
           classNames="list"
         >
-          <ActionTab clearAll={clearAllHandler} changeView={changeViewHandler} />
+          <TodoViews
+            currentView={todoView}
+            clearAll={clearAllHandler}
+            changeView={changeViewHandler}
+          />
         </CSSTransition>
       </div>
       <div className="App__helper u-mtop-sm">

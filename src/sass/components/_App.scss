@@ -12,15 +12,11 @@
   text-align: center;
 
   &__section {
-    max-width: 60%;
+    max-width: 50rem;
+    width: 100%;
     margin: 0 auto;
     border: 1px solid $color-grey-light-2;
     box-shadow: $shadow-sm;
-
-    @include bp(phone) {
-      max-width: 100%;
-      margin: 0 1rem;
-    }
   }
 
   &__helper {

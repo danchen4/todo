@@ -14,23 +14,21 @@ interface TodoListProps {
 
 export const TodoList: React.FC<TodoListProps> = React.memo(
   ({ todoList, view, deleteTodo, toggleComplete, changeTodo }) => {
-    console.log('<TodoList /> Render');
-
     const list = todoList
       .filter((todo: Todo): boolean => {
-        if (view === View['Active']) {
-          //
+        if (view === View.Active) {
           return todo.completed === false;
         }
-        if (view === View['Completed']) {
+        if (view === View.Completed) {
           return todo.completed === true;
         }
         return true;
       })
       .map((todo: Todo, index: number) => {
         return (
-          <CSSTransition key={todo.id} timeout={200} mountOnEnter unmountOnExit classNames="list">
+          <CSSTransition key={todo.id} timeout={100} classNames="list">
             <TodoListItem
+              key={todo.id}
               id={todo.id}
               deleteTodo={deleteTodo}
               completed={todo.completed}
