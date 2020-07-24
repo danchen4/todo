@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import '../sass/main.scss';
 import { TodoList } from '../component/TodoList';
@@ -38,7 +38,10 @@ const App = () => {
 
   const deleteTodoHandler = useCallback(
     (id: number): void => {
-      const updatedTodoList = todoList.filter((text: Todo) => text.id !== id);
+      const updatedTodoList = todoList.filter((todo: Todo) => todo.id !== id);
+      updatedTodoList.forEach((todo: Todo, index: number) => {
+        todo.id = index + 1;
+      });
       setTodoList(updatedTodoList);
       sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
     },
@@ -52,6 +55,7 @@ const App = () => {
         text: text,
         completed: false,
       });
+      console.log('updatedTodoList', updatedTodoList);
       setTodoList(updatedTodoList);
       sessionStorage.setItem('todoList', JSON.stringify(updatedTodoList));
     },

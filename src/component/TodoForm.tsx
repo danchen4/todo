@@ -22,7 +22,7 @@ export const TodoForm: React.FC<FormProps> = React.memo(({ addTodo, toggleAll })
   };
 
   const enterKeyDownHandler = (e: React.KeyboardEvent): void => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && input !== '') {
       addTodo(input);
       setInput('');
     }
